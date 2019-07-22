@@ -2,6 +2,8 @@ import React from 'react';
 import ValidationError from './ValidationError';
 import './AddFolder.css';
 import config from '../config';
+import NotefulContext from '../NotefulContext';
+
 
 class AddFolder extends React.Component {
   constructor(props) {
@@ -13,6 +15,7 @@ class AddFolder extends React.Component {
       }
     };
   }
+  static contextType = NotefulContext;
 
   updateName(name) {
     this.setState({name: {value: name, touched: true}});
@@ -21,9 +24,9 @@ class AddFolder extends React.Component {
   validateName(fieldValue) {
     const name = this.state.name.value.trim();
     if (name.length === 0) {
-      return 'Name is required';
+      return 'Folde name is required';
     } else if (name.length < 3) {
-      return 'Name must be at least 3 characters long';
+      return 'Folder name must be at least 3 characters long';
     }
   }
 
@@ -33,7 +36,7 @@ class AddFolder extends React.Component {
    
     console.log('Name: ', data.name.value);
   
-  fetch(`${config.API_ENDPOINT},/folders`, {
+  fetch(`${config.API_ENDPOINT}/folders`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
@@ -42,13 +45,11 @@ class AddFolder extends React.Component {
         name: data.name.value,
     })
   })
-      .then(response => {
-        return response.json()
-      })
-      .then((response) => {
-        this.context.addFolder()
-        //ADD NOTE TO CONTEXT OBJECT
-      })
+      .then(response => response.json())
+      // .then(() => {
+      //   this.context.addFolder(data.name.value)
+      // //   //ADD NOTE TO CONTEXT OBJECT
+      // })
       .catch(error => {
         console.error({ error })
       });
@@ -84,6 +85,7 @@ class AddFolder extends React.Component {
        </button>
       </div>
     </form>
+  
     );
   };
 }

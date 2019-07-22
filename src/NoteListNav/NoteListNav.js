@@ -6,6 +6,7 @@ import { countNotesForFolder } from '../notes-helpers'
 import './NoteListNav.css'
 import NotefulContext from '../NotefulContext';
 
+
 export default class NoteListNav extends React.Component {
   static contextType = NotefulContext;
 
@@ -29,16 +30,18 @@ export default class NoteListNav extends React.Component {
           )}
         </ul>
         <div className='NoteListNav__button-wrapper'>
-          <CircleButton
-            tag={Link}
-            to='/add-folder'
-            type='button'
-            className='NoteListNav__add-folder-button'
-          >
-            <FontAwesomeIcon icon='plus' />
-            <br />
-            Folder
-          </CircleButton>
+          
+            <CircleButton
+              tag={Link}
+              to='/add-folder'
+              type='button'
+              className='NoteListNav__add-folder-button'
+            >
+              <FontAwesomeIcon icon='plus' />
+              <br />
+              Folder
+            </CircleButton>
+           
         </div>
       </div>
     )

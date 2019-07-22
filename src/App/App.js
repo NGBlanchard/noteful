@@ -6,8 +6,11 @@ import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
 import NotefulContext from '../NotefulContext';
+import AddFolder from '../AddFolder/AddFolder';
 import config from '../config';
 import './App.css';
+
+
 
 class App extends Component {
     state = {
@@ -41,6 +44,10 @@ class App extends Component {
             notes: this.state.notes.filter(note => note.id !== noteId)
         });
     };
+    handleAddNote = name => {
+        this.history.push(`/`)
+      }
+   
 
     renderNavRoutes() {
         return (
@@ -54,8 +61,8 @@ class App extends Component {
                     />
                 ))}
                 <Route path="/note/:noteId" component={NotePageNav} />
-                <Route path="/add-folder" component={NotePageNav} />
-                <Route path="/add-note" component={NotePageNav} />
+                <Route path="/add-folder" component={AddFolder} />
+                <Route path="/add-note" component={NotePageNav} onAddNote={this.handleAddNote}/>
             </>
         );
     }
@@ -80,7 +87,8 @@ class App extends Component {
         const value = {
             notes: this.state.notes,
             folders: this.state.folders,
-            deleteNote: this.handleDeleteNote
+            deleteNote: this.handleDeleteNote,
+    
         };
         return (
             <NotefulContext.Provider value={value}>
@@ -95,6 +103,7 @@ class App extends Component {
                     <main className="App__main">{this.renderMainRoutes()}</main>
                 </div>
             </NotefulContext.Provider>
+            
         );
     }
 }

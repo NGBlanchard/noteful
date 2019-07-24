@@ -1,7 +1,9 @@
 import React from 'react';
-import ValidationError from './ValidationError';
+import ValidationError from '../ValidationError';
 import './AddNote.css';
 import config from '../config';
+import NotefulContext from '../NotefulContext';
+
 
 class AddNote extends React.Component {
   constructor(props) {
@@ -10,76 +12,72 @@ class AddNote extends React.Component {
       name: {
         value: '',
         touched: false
-      },
-
-      content: {
-        value: '',
-        touched:false
-      },
-
-      folder: {
-        value: '',
-        touched: false
       }
-
     };
+    this.contentInput = React.createRef();
   }
 
-  updateNote(name) {
+  static contextType = NotefulContext;
+
+
+  updateName(name) {
     this.setState({name: {value: name, touched: true}});
   }
-
 
   validateName(fieldValue) {
     const name = this.state.name.value.trim();
     if (name.length === 0) {
-      return 'Name is required';
-    } else if (name.length < 3) {
-      return 'Name must be at least 3 characters long';
-    }
+      return 'Folder name is required';
+    } 
   }
 
-  handleNewNote = (event) => {
+  handleNewNote = event => {
     event.preventDefault();
-    const { name } = this.state;
+    const data = {
+      name: this.state.name.value,
+      content: this.contentInput.current.value,
+      folderId: event.target.folderClassId.value,
+      modified: new Date()
+  };
    
-    console.log('Name: ', name.value);
-  
-    fetch(`${config.API_ENDPOINT},/folders`, {
+    fetch(`${config.API_ENDPOINT}/notes`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
       },
+      body: JSON.stringify(data)
     })
-      .then(response => {
-        if (!response.ok)
-          return response.json().then(e => Promise.reject(e))
+    .then(response => {
+      if(!response.ok)
+        return response.json().then(e => Promise.reject(e))
         return response.json()
-      })
-      .then(() => {
-        this.context.addNote({ name })
-        // allow parent to perform extra behaviour
-        this.props.onAddNote({ name })
-      })
+    })
+    .then((response) => {
+      this.context.addNote(response)
+    })
+    .then(() => {
+      this.props.history.push('/')
+    })
       .catch(error => {
         console.error({ error })
       })
   }
+
   
   render() {
+    const { folders=[] } = this.context;
     return (
-      
-      <form className="addFolder" onSubmit={e => this.handleNewNote(e)}>
+      <form className="addNote" onSubmit={e => this.handleNewNote(e)}>
       <h2>Create a New Note</h2>
    
       <div className="form-group">
         <label htmlFor="name">Name of Note</label>
         <input 
           type="text" 
-          className="addFolder__control"
+          className="noteName"
           name="name" 
           id="name" 
-          onChange={e => this.updateNote(e.target.value)} />
+          onChange={e => this.updateName(e.target.value)} />
           {this.state.name.touched && (
           <ValidationError message={this.validateName()} />
           )}
@@ -89,37 +87,32 @@ class AddNote extends React.Component {
         <label htmlFor="name">Content</label>
         <input 
           type="text" 
-          className="addFolder__control"
-          name="name" 
-          id="name" 
-          onChange={e => this.updateNote(e.target.value)} />
-          {this.state.name.touched && (
-          <ValidationError message={this.validateName()} />
-          )}
+          className="addNote__control"
+          name="Content" 
+          id="Content" 
+          ref= {this.contentInput} />
       </div>
 
       <div className="form-group">
-        <label htmlFor="name">Destination Folder</label>
-        <input 
-          type="text" 
-          className="addFolder__control"
-          name="name" 
-          id="name" 
-          onChange={e => this.updateNote(e.target.value)} />
-          {this.state.name.touched && (
-          <ValidationError message={this.validateName()} />
-          )}
+        <label htmlFor="folderClass">Destination Folder</label>
+        <select id="folderClassId" name="folderClassId" >
+           {folders.map((folder) => 
+            <option key={folder.id} value={folder.id}>
+                {folder.name}
+            </option>
+            )}
+        </select>
       </div>
 
       <div className="addNote__button__group">
-       <button 
-          type="submit" 
-          className="submit__button"
-          disabled={this.validateName()}
-          onClick={this.handleNewNote}
-       >
+          <button 
+            disabled={this.validateName()}
+            type="submit" 
+            className="submit__button"
+          >
            Create
-       </button>
+          </button>
+     
       </div>
     </form>
 

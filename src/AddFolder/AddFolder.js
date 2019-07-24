@@ -1,5 +1,5 @@
 import React from 'react';
-import ValidationError from './ValidationError';
+import ValidationError from '../ValidationError';
 import './AddFolder.css';
 import config from '../config';
 import NotefulContext from '../NotefulContext';
@@ -24,7 +24,7 @@ class AddFolder extends React.Component {
   validateName(fieldValue) {
     const name = this.state.name.value.trim();
     if (name.length === 0) {
-      return 'Folde name is required';
+      return 'Folder name is required';
     } else if (name.length < 3) {
       return 'Folder name must be at least 3 characters long';
     }
@@ -45,11 +45,20 @@ class AddFolder extends React.Component {
         name: data.name.value,
     })
   })
-      .then(response => response.json())
-      // .then(() => {
-      //   this.context.addFolder(data.name.value)
-      // //   //ADD NOTE TO CONTEXT OBJECT
-      // })
+      .then(response => {
+        if(!response.ok)
+        return response.json().then(err => {
+          console.log(err)
+          throw err
+        })
+        return response.json()
+      })
+      .then((response) => {
+        this.context.addFolder(response)
+      })
+      .then(() => {
+        this.props.history.push('/')
+      })
       .catch(error => {
         console.error({ error })
       });
@@ -65,7 +74,7 @@ class AddFolder extends React.Component {
         <label htmlFor="name">Name of Folder</label>
         <input 
           type="text" 
-          className="addFolder__control"
+          className="folderName"
           name="name" 
           id="name" 
           onChange={e => this.updateName(e.target.value)} />
@@ -77,9 +86,8 @@ class AddFolder extends React.Component {
       <div className="addFolder__button__group">
        <button 
           type="submit" 
-          className="submit__button"
+          className="addFolderButton"
           disabled={this.validateName()}
-          onClick={this.handleSubmit}
        >
            Create
        </button>

@@ -7,10 +7,11 @@ import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
 import NotefulContext from '../NotefulContext';
 import AddFolder from '../AddFolder/AddFolder';
+import AddNote from '../AddNote/AddNote';
+import NavError from '../ErrorBoundaries/NavError';
+import MainError from '../ErrorBoundaries/MainError';
 import config from '../config';
 import './App.css';
-
-
 
 class App extends Component {
     state = {
@@ -44,14 +45,24 @@ class App extends Component {
             notes: this.state.notes.filter(note => note.id !== noteId)
         });
     };
-    handleAddNote = name => {
-        this.history.push(`/`)
+
+
+    handleAddFolder = folder => {
+        this.setState({
+            folders: this.state.folders.concat(folder)
+        });
+    }
+
+    handleAddNote = note => {
+        this.setState({
+            notes: this.state.notes.concat(note)
+        });
       }
    
 
     renderNavRoutes() {
         return (
-            <>
+            <NavError>
                 {['/', '/folder/:folderId'].map(path => (
                     <Route
                         exact
@@ -62,14 +73,14 @@ class App extends Component {
                 ))}
                 <Route path="/note/:noteId" component={NotePageNav} />
                 <Route path="/add-folder" component={AddFolder} />
-                <Route path="/add-note" component={NotePageNav} onAddNote={this.handleAddNote}/>
-            </>
+                <Route path="/add-note" component={NoteListNav}  />
+            </NavError>
         );
     }
 
     renderMainRoutes() {
         return (
-            <>
+            <MainError>
                 {['/', '/folder/:folderId'].map(path => (
                     <Route
                         exact
@@ -79,7 +90,9 @@ class App extends Component {
                     />
                 ))}
                 <Route path="/note/:noteId" component={NotePageMain} />
-            </>
+                <Route path="/add-note" component={AddNote} onAddNote={this.handleAddNote}/>
+                <Route path="/add-folder" component={NoteListMain} />
+            </MainError>
         );
     }
 
@@ -88,6 +101,8 @@ class App extends Component {
             notes: this.state.notes,
             folders: this.state.folders,
             deleteNote: this.handleDeleteNote,
+            addFolder: this.handleAddFolder,
+            addNote: this.handleAddNote,
     
         };
         return (

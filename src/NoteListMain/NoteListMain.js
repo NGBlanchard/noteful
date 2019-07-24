@@ -5,6 +5,7 @@ import Note from '../Note/Note'
 import CircleButton from '../CircleButton/CircleButton'
 import './NoteListMain.css'
 import NotefulContext from '../NotefulContext';
+import PropTypes from 'prop-types';
 
 export default class NoteListMain extends React.Component {
   static contextType = NotefulContext;
@@ -42,4 +43,8 @@ export default class NoteListMain extends React.Component {
 
 NoteListMain.defaultProps = {
   notes: [],
+}
+
+NoteListMain.propTypes = {
+  value: PropTypes.array,
 }

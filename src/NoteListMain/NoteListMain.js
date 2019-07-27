@@ -14,13 +14,14 @@ export default class NoteListMain extends React.Component {
     const error = this.context.error
           ? <div className="noteful_app__error">{this.context.error}</div> : "";
 
+
   return (
     <section className='NoteListMain'>
       <div className="error_message">
         {error}
       </div>
       <ul>
-        {this.context.notes.map(note =>
+        {this.props.notes.map(note =>
           <li key={note.id}>
             <Note
               id={note.id}

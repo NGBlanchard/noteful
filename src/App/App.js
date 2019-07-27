@@ -11,6 +11,7 @@ import AddNote from '../AddNote/AddNote';
 import NavError from '../ErrorBoundaries/NavError';
 import MainError from '../ErrorBoundaries/MainError';
 import config from '../config';
+import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
 import './App.css';
 
 class App extends Component {
@@ -64,6 +65,7 @@ class App extends Component {
    
 
     renderNavRoutes() {
+        const {notes, folders} = this.state;
         return (
             <NavError>
                 {['/', '/folder/:folderId'].map(path => (
@@ -71,10 +73,23 @@ class App extends Component {
                         exact
                         key={path}
                         path={path}
-                        component={NoteListNav}
-                    />
-                ))}
-                <Route path="/note/:noteId" component={NotePageNav} />
+                        render={routeProps => (
+                            <NoteListNav
+                                folders={folders}
+                                notes={notes}
+                                {...routeProps}
+                                />
+                                )}
+                            />
+                        ))}
+                <Route path="/note/:noteId"
+                    render={routeProps => {
+                        const {noteId} = routeProps.match.params;
+                        const note = findNote(notes, noteId) || {};
+                        const folder = findFolder(folders, note.folderId);
+                        return <NotePageNav {...routeProps} folder={folder} />;
+                    }}
+                />
                 <Route path="/add-folder" component={AddFolder} />
                 <Route path="/add-note" component={NoteListNav}  />
             </NavError>
@@ -82,6 +97,7 @@ class App extends Component {
     }
 
     renderMainRoutes() {
+        const {notes} = this.state;
         return (
             <MainError>
                 {['/', '/folder/:folderId'].map(path => (
@@ -89,12 +105,44 @@ class App extends Component {
                         exact
                         key={path}
                         path={path}
-                        component={NoteListMain}
+                        render={routeProps => {
+                            const {folderId} = routeProps.match.params;
+                            const notesForFolder = getNotesForFolder(
+                                notes,
+                                folderId
+                            );
+                            return (
+                                <NoteListMain
+                                    {...routeProps}
+                                    notes={notesForFolder}
+                                />
+                            );
+                        }}
                     />
                 ))}
-                <Route path="/note/:noteId" component={NotePageMain} />
+                <Route 
+                    path="/note/:noteId" 
+                    render={routeProps => {
+                        const {noteId} = routeProps.match.params;
+                        const note = findNote(notes, noteId);
+                        return <NotePageMain {...routeProps} note={note} />;
+                    }}
+                />
                 <Route path="/add-note" component={AddNote} onAddNote={this.handleAddNote}/>
-                <Route path="/add-folder" component={NoteListMain} />
+                <Route path="/add-folder" render={routeProps => {
+                            const {folderId} = routeProps.match.params;
+                            const notesForFolder = getNotesForFolder(
+                                notes,
+                                folderId
+                            );
+                            return (
+                                <NoteListMain
+                                    {...routeProps}
+                                    notes={notesForFolder}
+                                />
+                            );
+                        }}
+                    />
             </MainError>
         );
     }

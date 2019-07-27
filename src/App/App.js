@@ -16,7 +16,8 @@ import './App.css';
 class App extends Component {
     state = {
         notes: [],
-        folders: []
+        folders: [],
+        error: '',
     };
 
     componentDidMount() {
@@ -35,8 +36,10 @@ class App extends Component {
             .then(([notes, folders]) => {
                 this.setState({notes, folders});
             })
-            .catch(error => {
-                console.error({error});
+            .catch(err => {
+                this.setState({
+                  error: err.message
+                });
             });
     }
 
@@ -103,6 +106,7 @@ class App extends Component {
             deleteNote: this.handleDeleteNote,
             addFolder: this.handleAddFolder,
             addNote: this.handleAddNote,
+            error: this.state.error,
     
         };
         return (

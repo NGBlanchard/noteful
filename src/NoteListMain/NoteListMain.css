@@ -17,3 +17,8 @@
   background-color: #FFB72F;
   color: white;
 }
+
+.error_message {
+  color: red;
+  font-size: 24px;
+}

@@ -40,7 +40,7 @@ class AddFolder extends React.Component {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        name: data.name.value,
+        foldername: data.name.value,
     })
   })
       .then(response => {

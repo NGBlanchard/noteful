@@ -86,7 +86,7 @@ class App extends Component {
                     render={routeProps => {
                         const {noteId} = routeProps.match.params;
                         const note = findNote(notes, noteId) || {};
-                        const folder = findFolder(folders, note.folderId);
+                        const folder = findFolder(folders, note.folderid);
                         return <NotePageNav {...routeProps} folder={folder} />;
                     }}
                 />
@@ -106,10 +106,10 @@ class App extends Component {
                         key={path}
                         path={path}
                         render={routeProps => {
-                            const {folderId} = routeProps.match.params;
+                            const {folderid} = routeProps.match.params;
                             const notesForFolder = getNotesForFolder(
                                 notes,
-                                folderId
+                                folderid
                             );
                             return (
                                 <NoteListMain
@@ -130,10 +130,10 @@ class App extends Component {
                 />
                 <Route path="/add-note" component={AddNote} onAddNote={this.handleAddNote}/>
                 <Route path="/add-folder" render={routeProps => {
-                            const {folderId} = routeProps.match.params;
+                            const {folderid} = routeProps.match.params;
                             const notesForFolder = getNotesForFolder(
                                 notes,
-                                folderId
+                                folderid
                             );
                             return (
                                 <NoteListMain

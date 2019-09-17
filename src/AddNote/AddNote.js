@@ -35,9 +35,9 @@ class AddNote extends React.Component {
     event.preventDefault();
     const data = {
       name: this.state.name.value,
+      modified: new Date(),
       content: this.contentInput.current.value,
-      folderId: event.target.folderClassId.value,
-      modified: new Date()
+      folderid: event.target.folderClassId.value
   };
    
     fetch(`${config.API_ENDPOINT}/notes`, {
@@ -98,7 +98,7 @@ class AddNote extends React.Component {
         <select id="folderClassId" name="folderClassId" >
            {folders.map((folder) => 
             <option key={folder.id} value={folder.id}>
-                {folder.name}
+                {folder.foldername}
             </option>
             )}
         </select>

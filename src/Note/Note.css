@@ -1,6 +1,6 @@
 .Note {
   --note-height: 88px;
-  background-color: #4b27ff;
+  background-color: #9b94be;
   color: #cacaca;
   height: var(--note-height);
   margin-bottom: 8px;
@@ -50,7 +50,7 @@
 
 .Note__dates {
   bottom: 8px;
-  color: #e1e1e1;
+  color: white;
   font-size: 14px;
   position: absolute;
 }

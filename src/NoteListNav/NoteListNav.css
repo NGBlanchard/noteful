@@ -18,9 +18,9 @@
 }
 
 .NoteListNav__folder-link {
-  background-color: navy;
+  background-color: beige;
   border-radius: 3px;
-  color: white;
+  color: navy;
   display: block;
   font-family: var(--custom-font);
   font-size: 20px;
@@ -38,7 +38,7 @@
 }
 
 .NoteListNav__num-notes {
-  color: #adadad;
+  color: white;
   display: block;
   float: right;
   font-size: 10px;

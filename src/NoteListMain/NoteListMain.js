@@ -20,9 +20,9 @@ export default class NoteListMain extends React.Component {
     const error = this.context.error
           ? <div className="noteful_app__error">{this.context.error}</div> : "";
 
-          const { folderId } = this.props.match.params
+          const { folderid } = this.props.match.params
           const { notes=[] } = this.context
-          const notesForFolder = getNotesForFolder(notes, folderId)
+          const notesForFolder = getNotesForFolder(notes, folderid)
   return (
     <section className='NoteListMain'>
       <div className="error_message">

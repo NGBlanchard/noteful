@@ -6,22 +6,30 @@ import CircleButton from '../CircleButton/CircleButton'
 import './NoteListMain.css'
 import NotefulContext from '../NotefulContext';
 import PropTypes from 'prop-types';
+import { getNotesForFolder } from '../notes-helpers'
 
 export default class NoteListMain extends React.Component {
+  static defaultProps = {
+    match: {
+      params: {}
+    }
+  }
   static contextType = NotefulContext;
   
   render() {
     const error = this.context.error
           ? <div className="noteful_app__error">{this.context.error}</div> : "";
 
-
+          const { folderId } = this.props.match.params
+          const { notes=[] } = this.context
+          const notesForFolder = getNotesForFolder(notes, folderId)
   return (
     <section className='NoteListMain'>
       <div className="error_message">
         {error}
       </div>
       <ul>
-        {this.props.notes.map(note =>
+        {notesForFolder.map(note =>
           <li key={note.id}>
             <Note
               id={note.id}

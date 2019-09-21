@@ -6,6 +6,14 @@
 }
 
 .NotePageMain__content {
-  color: #3a3939;
+  color: white;
   max-width: 380px;
+}
+
+.Note__dates-modified {
+  color: white;
+}
+
+.Date {
+  color: white;
 }

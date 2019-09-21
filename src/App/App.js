@@ -78,10 +78,10 @@ class App extends Component {
                                 folders={folders}
                                 notes={notes}
                                 {...routeProps}
-                                />
-                                )}
                             />
-                        ))}
+                        )}
+                    />
+                ))}
                 <Route path="/note/:noteId"
                     render={routeProps => {
                         const {noteId} = routeProps.match.params;
@@ -100,7 +100,7 @@ class App extends Component {
         const {notes} = this.state;
         return (
             <MainError>
-                {['/', '/folder/:folderId'].map(path => (
+                {['/', '/folder/:folderid'].map(path => (
                     <Route
                         exact
                         key={path}
@@ -154,8 +154,7 @@ class App extends Component {
             deleteNote: this.handleDeleteNote,
             addFolder: this.handleAddFolder,
             addNote: this.handleAddNote,
-            error: this.state.error,
-    
+            error: this.state.error
         };
         return (
             <NotefulContext.Provider value={value}>

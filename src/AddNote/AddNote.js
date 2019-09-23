@@ -12,6 +12,10 @@ class AddNote extends React.Component {
       name: {
         value: '',
         touched: false
+      },
+      content: {
+        value: '',
+        touched: false
       }
     };
     this.contentInput = React.createRef();
@@ -28,6 +32,17 @@ class AddNote extends React.Component {
     const name = this.state.name.value.trim();
     if (name.length === 0) {
       return 'Folder name is required';
+    } 
+  }
+
+  updateContent(content) {
+    this.setState({content: {value: content, touched: true}});
+  }
+
+  validateContent(fieldValue) {
+    const content = this.state.content.value.trim();
+    if (!content) {
+      return 'Content  is required';
     } 
   }
 
@@ -90,7 +105,11 @@ class AddNote extends React.Component {
           className="addNote__control"
           name="Content" 
           id="Content" 
-          ref= {this.contentInput} />
+          ref= {this.contentInput}
+          onChange={e => this.updateContent(e.target.value)} />
+          {this.state.content.touched && (
+          <ValidationError message={this.validateContent()} />
+          )}
       </div>
 
       <div className="form-group">
@@ -106,7 +125,7 @@ class AddNote extends React.Component {
 
       <div className="addNote__button__group">
           <button 
-            disabled={this.validateName()}
+            disabled={this.validateName() || this.validateContent()} 
             type="submit" 
             className="submit__button"
           >
